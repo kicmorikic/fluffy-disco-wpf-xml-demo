@@ -6,7 +6,7 @@ namespace wpfApp_Tests
     public class XMLManipulationTests
     {
         private const string TestFilenameSuffix = "_testdata.xml";
-        private string TestFilenamePrefix = $".{Path.DirectorySeparatorChar}";
+        private readonly string TestFilenamePrefix = $".{Path.DirectorySeparatorChar}";
         
         [Fact]
         public void OpenNonExisting_GetAllPeople_ReturnsEmptyList()
@@ -27,7 +27,7 @@ namespace wpfApp_Tests
         {
             //given
             string filename = GetPath(nameof(OpenNonExistingRepository_Save_SavesXmlWithNoPeople));
-            string expectedXmlContent = XMLManipulationTests_data.XmlSampleData["FileWithNoEntries"];
+            string expectedXmlContent = TestData.XmlSampleData[TestData.Xml.FileWithNoEntries];
             EnsureFileIsDeleted(filename);
             PeopleRepository SUT = new PeopleRepository(filename);
             
@@ -43,13 +43,13 @@ namespace wpfApp_Tests
         {
             //given
             string filename = GetPath(nameof(OpenNonExistingRepository_AddThenSave_SavesXmlWithSinglePerson));
-            string expectedXmlContent = XMLManipulationTests_data.XmlSampleData["FileWithPerson1Only"];
+            string expectedXmlContent = TestData.XmlSampleData[TestData.Xml.FileWithPerson1Only];
             EnsureFileIsDeleted(filename);
             PeopleRepository SUT = new PeopleRepository(filename);
 
             //when
             SUT.Load();
-            SUT.Insert(XMLManipulationTests_data.testPersons["person1"]);
+            SUT.Insert(TestData.testPeople[TestData.persEnum.person1]);
             SUT.Save();
             //then
             var actualContent = File.ReadAllText(filename);
@@ -60,14 +60,14 @@ namespace wpfApp_Tests
         public void OpenExistingRepository_GetAll_ReturnsSinglePerson()
         {
             //given
-            string filename = GetPath(nameof(OpenNonExistingRepository_AddThenSave_SavesXmlWithSinglePerson));
+            string filename = GetPath(nameof(OpenExistingRepository_GetAll_ReturnsSinglePerson));
             EnsureFileExistsWithSpecificContent(filename
-                , XMLManipulationTests_data.XmlSampleData["FileWithPerson1Only"]);
-            var expectedPerson = XMLManipulationTests_data.testPersons["person1"];
-            PeopleRepository SUT = new PeopleRepository(filename);
+                , TestData.XmlSampleData[TestData.Xml.FileWithPerson1Only]);
+            var expectedPerson = TestData.testPeople[TestData.persEnum.person1];
+
 
             //when
-            SUT.Load();
+            PeopleRepository SUT = new PeopleRepository(filename);
             //then
             var result = SUT.GetAllPeople();
             Assert.Collection(result, item =>
@@ -75,7 +75,23 @@ namespace wpfApp_Tests
                 Assert2PeopleEqual(expectedPerson, item);
             });
         }
-
+        [Fact]
+        public void ExistingRepositoryWithMultiplePeople_GetAll_ReturnsEveryPersonWithId()
+        {
+            //given
+            string filename = GetPath(nameof(ExistingRepositoryWithMultiplePeople_GetAll_ReturnsEveryPersonWithId));
+            EnsureFileExistsWithSpecificContent(filename
+                , TestData.XmlSampleData[TestData.Xml.FileWith2People]);
+            
+            //when
+            PeopleRepository SUT = new PeopleRepository(filename);
+            //then
+            var result = SUT.GetAllPeople();
+            Assert.Collection(result, 
+                    item => Assert.Equal(1,item.Id),
+                    item => Assert.Equal(2,item.Id)
+                    );
+        }
 
 
 

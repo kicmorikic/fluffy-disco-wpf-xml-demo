@@ -9,7 +9,8 @@ namespace wpfApp.Repository;
 public class PeopleRepository : IPeopleRepository
 {
     private string _xmlPath;
-    private PeopleList _peopleList;
+    private PeopleList _peopleList = new();
+    private readonly XmlSerializer _serializer = new (typeof(PeopleList));
 
     public PeopleRepository(string xmlPath)
     {
@@ -21,19 +22,26 @@ public class PeopleRepository : IPeopleRepository
     {
         if (File.Exists(_xmlPath))
         {
-            throw new NotImplementedException();
+            XmlSerializer serializer = new XmlSerializer(typeof(PeopleList));
+            using (FileStream stream = File.OpenRead(_xmlPath))
+            {
+                _peopleList = (PeopleList)serializer.Deserialize(stream);
+            }
+            AddIds();
+            
+
         }
         else
         {
             _peopleList = new PeopleList();
         }
     }
-
+    
     public void Save()
     {
-        XmlSerializer serializer = new XmlSerializer(typeof(PeopleList));
+        
         var writer = File.OpenWrite(_xmlPath);
-        serializer.Serialize(writer, _peopleList);
+        _serializer.Serialize(writer, _peopleList);
         writer.Close();
         
     }
@@ -61,5 +69,15 @@ public class PeopleRepository : IPeopleRepository
     public IEnumerable<Person> GetAllPeople()
     {
         return _peopleList.People;
+    }
+
+    private void AddIds()
+    {
+        int id = 1;
+        foreach (Person person in _peopleList.People)
+        {
+            person.Id=id;
+            id++;
+        }
     }
 }
