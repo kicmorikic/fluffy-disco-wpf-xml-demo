@@ -8,7 +8,8 @@ public class TestData
     {
         FileWithNoEntries,
         FileWithPerson1Only,
-        FileWith2People
+        FileWith2People,
+        FileWith2PeopleFirstUpdated
     }
     public static Dictionary<Xml, string> XmlSampleData = new Dictionary<Xml, string>()
     {
@@ -23,6 +24,10 @@ public class TestData
         {
             Xml.FileWith2People,
             @"<?xml version=""1.0"" encoding=""utf-8""?><PeopleList xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><People><Person><FirstName>fname</FirstName><LastName>lname</LastName><StreetName>street</StreetName><HouseNumber>1</HouseNumber><ApartmentNumber>1</ApartmentNumber><PostalCode>12345</PostalCode><Town>town</Town><PhoneNumber>123456789</PhoneNumber><DateOfBirth>2000-01-01T00:00:00</DateOfBirth></Person><Person><FirstName>fname2</FirstName><LastName>lname2</LastName><StreetName>street2</StreetName><HouseNumber>12</HouseNumber><ApartmentNumber>12</ApartmentNumber><PostalCode>123452</PostalCode><Town>town2</Town><PhoneNumber>1234567892</PhoneNumber><DateOfBirth>2000-01-02T00:00:00</DateOfBirth></Person></People></PeopleList>"
+        },
+        {
+            Xml.FileWith2PeopleFirstUpdated,
+            @"<?xml version=""1.0"" encoding=""utf-8""?><PeopleList xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><People><Person><FirstName>fnameUpdated</FirstName><LastName>lname</LastName><StreetName>street</StreetName><HouseNumber>1</HouseNumber><ApartmentNumber>1</ApartmentNumber><PostalCode>12345</PostalCode><Town>town</Town><PhoneNumber>123456789</PhoneNumber><DateOfBirth>0001-01-01T00:00:00</DateOfBirth></Person><Person><FirstName>fname2</FirstName><LastName>lname2</LastName><StreetName>street2</StreetName><HouseNumber>12</HouseNumber><ApartmentNumber>12</ApartmentNumber><PostalCode>123452</PostalCode><Town>town2</Town><PhoneNumber>1234567892</PhoneNumber><DateOfBirth>2000-01-02T00:00:00</DateOfBirth></Person></People></PeopleList>"
         }
     };
 

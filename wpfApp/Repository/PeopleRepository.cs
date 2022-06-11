@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using wpfApp.Model;
 
@@ -48,7 +49,16 @@ public class PeopleRepository : IPeopleRepository
 
     public void Update(Person updatedPerson)
     {
-        throw new System.NotImplementedException();
+        var personToUpdate = GetPersonById(updatedPerson.Id);
+        personToUpdate.FirstName = updatedPerson.FirstName;
+        personToUpdate.LastName = updatedPerson.LastName;
+        personToUpdate.DateOfBirth = updatedPerson.DateOfBirth;
+        personToUpdate.StreetName = updatedPerson.StreetName;
+        personToUpdate.HouseNumber = updatedPerson.HouseNumber;
+        personToUpdate.ApartmentNumber = updatedPerson.ApartmentNumber;
+        personToUpdate.Town = updatedPerson.Town;
+        personToUpdate.PostalCode =updatedPerson.PostalCode;
+        personToUpdate.PhoneNumber = updatedPerson.PhoneNumber;
     }
 
     public void Delete(Person personToDelete)
@@ -63,7 +73,7 @@ public class PeopleRepository : IPeopleRepository
 
     public Person GetPersonById(int personId)
     {
-        throw new System.NotImplementedException();
+        return _peopleList.People.Single(p => p.Id == personId);
     }
 
     public IEnumerable<Person> GetAllPeople()
@@ -80,4 +90,6 @@ public class PeopleRepository : IPeopleRepository
             id++;
         }
     }
+
+    
 }

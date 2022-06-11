@@ -92,7 +92,29 @@ namespace wpfApp_Tests
                     item => Assert.Equal(2,item.Id)
                     );
         }
+        [Fact]
+        public void ExistingRepositoryWithMultiplePeople_UpdateSave_SavesUpdatedPerson()
+        {
+            //given
+            string filename = GetPath(nameof(ExistingRepositoryWithMultiplePeople_UpdateSave_SavesUpdatedPerson));
+            EnsureFileExistsWithSpecificContent(filename
+                , TestData.XmlSampleData[TestData.Xml.FileWith2People]);
+            PeopleRepository SUT = new PeopleRepository(filename);
+            string expectedname = "fnameUpdated";
+            DateTime expectedDateOfBirth = DateTime.MinValue;
+            
 
+            //when
+            var personToUpdate = SUT.GetPersonById(1);
+            personToUpdate.FirstName = expectedname;
+            personToUpdate.DateOfBirth = expectedDateOfBirth;
+            SUT.Update(personToUpdate);
+            SUT.Save();
+            //then
+            var actualContent = File.ReadAllText(filename);
+            Assert.Equal(TestData.XmlSampleData[TestData.Xml.FileWith2PeopleFirstUpdated]
+                , actualContent);
+        }
 
 
 
