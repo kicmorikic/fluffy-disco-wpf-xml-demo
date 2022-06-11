@@ -6,6 +6,7 @@ namespace wpfApp.Model;
 [XmlType("Person")]
 public class Person
 {
+    [XmlIgnore]
     public int Id { get; set; }
     [XmlElement]
     public string FirstName { get; set; }

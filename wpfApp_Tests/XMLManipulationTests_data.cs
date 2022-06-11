@@ -9,6 +9,10 @@ public class XMLManipulationTests_data
         {
             "FileWithNoEntries",
             @"<?xml version=""1.0"" encoding=""utf-8""?><PeopleList xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><People /></PeopleList>"
+        },
+        {
+            "FileWithPerson1Only",
+            @"<?xml version=""1.0"" encoding=""utf-8""?><PeopleList xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><People><Person><FirstName>fname</FirstName><LastName>lname</LastName><StreetName>street</StreetName><HouseNumber>1</HouseNumber><ApartmentNumber>1</ApartmentNumber><PostalCode>12345</PostalCode><Town>town</Town><PhoneNumber>123456789</PhoneNumber><DateOfBirth>2000-01-01T00:00:00</DateOfBirth></Person></People></PeopleList>"
         }
     };
     public static Dictionary<string, Person> testPersons = new Dictionary<string, Person>()

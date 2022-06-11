@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using wpfApp.Model;
@@ -20,7 +21,7 @@ public class PeopleRepository : IPeopleRepository
     {
         if (File.Exists(_xmlPath))
         {
-            
+            throw new NotImplementedException();
         }
         else
         {
@@ -49,7 +50,7 @@ public class PeopleRepository : IPeopleRepository
 
     public void Insert(Person personToInsert)
     {
-        throw new System.NotImplementedException();
+        _peopleList.People.Add(personToInsert);
     }
 
     public Person GetPersonById(int personId)
