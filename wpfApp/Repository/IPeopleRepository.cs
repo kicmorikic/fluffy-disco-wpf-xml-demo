@@ -10,9 +10,8 @@ public interface IPeopleRepository
 {
     void Load();
     void Save();
-    void Update(Person updatedPerson);
     void Delete(Person personToDelete);
-    void Insert(Person personToInsert);
+    int Insert(Person personToInsert);
     Person GetPersonById(int personId);
     IEnumerable<Person> GetAllPeople();
     

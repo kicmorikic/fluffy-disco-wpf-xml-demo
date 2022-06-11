@@ -7,6 +7,7 @@ namespace wpfApp_Tests
     {
         private const string TestFilenameSuffix = "_testdata.xml";
         private readonly string TestFilenamePrefix = $".{Path.DirectorySeparatorChar}";
+        private TestData data = new TestData();
         
         [Fact]
         public void OpenNonExisting_GetAllPeople_ReturnsEmptyList()
@@ -27,7 +28,7 @@ namespace wpfApp_Tests
         {
             //given
             string filename = GetPath(nameof(OpenNonExistingRepository_Save_SavesXmlWithNoPeople));
-            string expectedXmlContent = TestData.XmlSampleData[TestData.Xml.FileWithNoEntries];
+            string expectedXmlContent = data.XmlSampleData[TestData.Xml.FileWithNoEntries];
             EnsureFileIsDeleted(filename);
             PeopleRepository SUT = new PeopleRepository(filename);
             
@@ -43,13 +44,13 @@ namespace wpfApp_Tests
         {
             //given
             string filename = GetPath(nameof(OpenNonExistingRepository_AddThenSave_SavesXmlWithSinglePerson));
-            string expectedXmlContent = TestData.XmlSampleData[TestData.Xml.FileWithPerson1Only];
+            string expectedXmlContent = data.XmlSampleData[TestData.Xml.FileWithPerson1Only];
             EnsureFileIsDeleted(filename);
             PeopleRepository SUT = new PeopleRepository(filename);
 
             //when
             SUT.Load();
-            SUT.Insert(TestData.testPeople[TestData.persEnum.person1]);
+            SUT.Insert(data.testPeople[TestData.persEnum.person1]);
             SUT.Save();
             //then
             var actualContent = File.ReadAllText(filename);
@@ -62,8 +63,8 @@ namespace wpfApp_Tests
             //given
             string filename = GetPath(nameof(OpenExistingRepository_GetAll_ReturnsSinglePerson));
             EnsureFileExistsWithSpecificContent(filename
-                , TestData.XmlSampleData[TestData.Xml.FileWithPerson1Only]);
-            var expectedPerson = TestData.testPeople[TestData.persEnum.person1];
+                , data.XmlSampleData[TestData.Xml.FileWithPerson1Only]);
+            var expectedPerson = data.testPeople[TestData.persEnum.person1];
 
 
             //when
@@ -81,7 +82,7 @@ namespace wpfApp_Tests
             //given
             string filename = GetPath(nameof(ExistingRepositoryWithMultiplePeople_GetAll_ReturnsEveryPersonWithId));
             EnsureFileExistsWithSpecificContent(filename
-                , TestData.XmlSampleData[TestData.Xml.FileWith2People]);
+                , data.XmlSampleData[TestData.Xml.FileWith2People]);
             
             //when
             PeopleRepository SUT = new PeopleRepository(filename);
@@ -98,25 +99,84 @@ namespace wpfApp_Tests
             //given
             string filename = GetPath(nameof(ExistingRepositoryWithMultiplePeople_UpdateSave_SavesUpdatedPerson));
             EnsureFileExistsWithSpecificContent(filename
-                , TestData.XmlSampleData[TestData.Xml.FileWith2People]);
+                , data.XmlSampleData[TestData.Xml.FileWith2People]);
             PeopleRepository SUT = new PeopleRepository(filename);
-            string expectedname = "fnameUpdated";
-            DateTime expectedDateOfBirth = DateTime.MinValue;
+            string newName = "fnameUpdated";
+            DateTime newDateOfBirth = DateTime.MinValue;
             
 
             //when
             var personToUpdate = SUT.GetPersonById(1);
-            personToUpdate.FirstName = expectedname;
-            personToUpdate.DateOfBirth = expectedDateOfBirth;
-            SUT.Update(personToUpdate);
+            personToUpdate.FirstName = newName;
+            personToUpdate.DateOfBirth = newDateOfBirth;
             SUT.Save();
             //then
             var actualContent = File.ReadAllText(filename);
-            Assert.Equal(TestData.XmlSampleData[TestData.Xml.FileWith2PeopleFirstUpdated]
+            Assert.Equal(data.XmlSampleData[TestData.Xml.FileWith2PeopleFirstUpdated]
                 , actualContent);
         }
+        [Fact]
+        public void EmptyRepository_InsertUpdateSave_SavesUpdatedPerson()
+        {
+            //given
+            string filename = GetPath(nameof(EmptyRepository_InsertUpdateSave_SavesUpdatedPerson));
+            EnsureFileIsDeleted(filename);
+            string newName = "fnameUpdated";
+            var SUT = new PeopleRepository(filename);
+            var personToAddAndUpdate = data.testPeople[TestData.persEnum.person1];
 
 
+            //when
+            SUT.Insert(personToAddAndUpdate);
+            personToAddAndUpdate.FirstName = newName;
+            
+            SUT.Save();
+            //then
+            var actualContent = File.ReadAllText(filename);
+            Assert.Equal(data.XmlSampleData[TestData.Xml.FileWithPerson1OnlyUpdated]
+                , actualContent);
+        }
+        [Theory]
+        [InlineData(TestData.Xml.FileWithNoEntries, 1)]
+        [InlineData(TestData.Xml.FileWith2People, 3)]
+        public void ExistingRepository_Insert_ReturnsCorrectId(TestData.Xml repoIdXml, int expectedId)
+        {
+            //given
+            string filename = GetPath(nameof(ExistingRepository_Insert_ReturnsCorrectId)+ repoIdXml);
+            EnsureFileExistsWithSpecificContent(filename, data.XmlSampleData[repoIdXml]);
+            
+            var SUT = new PeopleRepository(filename);
+            var personToInsert = data.testPeople[TestData.persEnum.person1];
+
+
+            //when
+            var result = SUT.Insert(personToInsert);
+
+            
+            //then
+            Assert.Equal(expectedId, result);
+        }
+        [Fact]
+        public void OpenExistingRepository_Delete_SavesEmptyXml()
+        {
+            //given
+            string filename = GetPath(nameof(OpenExistingRepository_Delete_SavesEmptyXml));
+            EnsureFileExistsWithSpecificContent(filename
+                , data.XmlSampleData[TestData.Xml.FileWith2People]);
+
+
+            //when
+            PeopleRepository SUT = new PeopleRepository(filename);
+            foreach (var person in SUT.GetAllPeople())
+            {
+                SUT.Delete(person);
+            }
+            SUT.Save();
+            //then
+            var actualContent = File.ReadAllText(filename);
+            Assert.Equal(data.XmlSampleData[TestData.Xml.FileWithNoEntries]
+                , actualContent);
+        }
 
         private static void EnsureFileIsDeleted(string path)
         {

@@ -40,35 +40,25 @@ public class PeopleRepository : IPeopleRepository
     
     public void Save()
     {
-        
-        var writer = File.OpenWrite(_xmlPath);
+        var writer = File.Create(_xmlPath);
         _serializer.Serialize(writer, _peopleList);
         writer.Close();
         
     }
 
-    public void Update(Person updatedPerson)
-    {
-        var personToUpdate = GetPersonById(updatedPerson.Id);
-        personToUpdate.FirstName = updatedPerson.FirstName;
-        personToUpdate.LastName = updatedPerson.LastName;
-        personToUpdate.DateOfBirth = updatedPerson.DateOfBirth;
-        personToUpdate.StreetName = updatedPerson.StreetName;
-        personToUpdate.HouseNumber = updatedPerson.HouseNumber;
-        personToUpdate.ApartmentNumber = updatedPerson.ApartmentNumber;
-        personToUpdate.Town = updatedPerson.Town;
-        personToUpdate.PostalCode =updatedPerson.PostalCode;
-        personToUpdate.PhoneNumber = updatedPerson.PhoneNumber;
-    }
+    
 
     public void Delete(Person personToDelete)
     {
-        throw new System.NotImplementedException();
+        _peopleList.People.Remove(personToDelete);
     }
 
-    public void Insert(Person personToInsert)
+    public int Insert(Person personToInsert)
     {
+        int nextid = _peopleList.People.Count>0?_peopleList.People.Max(p => p.Id)+1:1;
+        personToInsert.Id= nextid;
         _peopleList.People.Add(personToInsert);
+        return nextid;
     }
 
     public Person GetPersonById(int personId)
@@ -78,7 +68,7 @@ public class PeopleRepository : IPeopleRepository
 
     public IEnumerable<Person> GetAllPeople()
     {
-        return _peopleList.People;
+        return _peopleList.People.ToList();
     }
 
     private void AddIds()
