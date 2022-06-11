@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wpfApp", "wpfApp\wpfApp.csproj", "{DD028687-4D2F-4085-BE1D-FA8A04096638}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05CA070C-CAF4-4CFB-845A-437FA581F746}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD028687-4D2F-4085-BE1D-FA8A04096638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD028687-4D2F-4085-BE1D-FA8A04096638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD028687-4D2F-4085-BE1D-FA8A04096638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD028687-4D2F-4085-BE1D-FA8A04096638}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D434A55C-3DEC-409B-9C6F-38104A5B0606}
+	EndGlobalSection
+EndGlobal
