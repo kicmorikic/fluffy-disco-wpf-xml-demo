@@ -48,9 +48,9 @@ public class PeopleRepository : IPeopleRepository
 
     
 
-    public void Delete(Person personToDelete)
+    public void Delete(int id)
     {
-        _peopleList.People.Remove(personToDelete);
+        _peopleList.People.RemoveAll(item => item.Id == id);
     }
 
     public int Insert(Person personToInsert)

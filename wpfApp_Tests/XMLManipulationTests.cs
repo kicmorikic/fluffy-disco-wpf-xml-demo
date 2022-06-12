@@ -169,7 +169,7 @@ namespace wpfApp_Tests
             PeopleRepository SUT = new PeopleRepository(filename);
             foreach (var person in SUT.GetAllPeople())
             {
-                SUT.Delete(person);
+                SUT.Delete(person.Id);
             }
             SUT.Save();
             //then
