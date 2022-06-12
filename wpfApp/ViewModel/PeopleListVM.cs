@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using wpfApp.Repository;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 
 namespace wpfApp.ViewModel;
 
@@ -37,19 +40,25 @@ public class PeopleListVM
         {
             peopleVMColection.Add(new PersonVM(person));
         }
+        foreach (var personVm in peopleVMColection)
+        {
+            personVm.PropertyChanged += PersonVmOnPropertyChanged;
+        }
 
         IsChanged = false;
     }
     private void RegisterHandlers()
     {
-        foreach (var personVm in peopleVMColection)
-        {
-            personVm.PropertyChanged += PersonVmOnPropertyChanged;
-        }
         peopleVMColection.CollectionChanged += CollectionChanged;
         _mainWindow.Save_btn.Click += Save_btn_Click;
         _mainWindow.Cancel_btn.Click += Cancel_btn_Click;
         _mainWindow.PeopleDG.CellEditEnding += PeopleDG_CellEditEnding;
+        _mainWindow.PeopleDG.CurrentCellChanged += PeopleDG_CurrentCellChanged;
+    }
+
+    private void PeopleDG_CurrentCellChanged(object? sender, EventArgs e)
+    {
+        ((DataGrid)sender).CommitEdit(DataGridEditingUnit.Row, true);
     }
 
     private void PeopleDG_CellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
@@ -71,19 +80,21 @@ public class PeopleListVM
             }
             
         }
+
         
+
     }
 
     private void Cancel_btn_Click(object? sender, RoutedEventArgs e)
     {
-        peopleVMColection.CollectionChanged -= CollectionChanged;
+        
         ReloadCollection();
-        peopleVMColection.CollectionChanged += CollectionChanged;
+        
 
     }
     private void Save_btn_Click(object? sender, RoutedEventArgs e)
     {
-        if (IsValid(_mainWindow.PeopleDG))
+        if (IsValid(peopleVMColection))
         {
             _repository.Save();
             IsChanged = false;
@@ -124,11 +135,12 @@ public class PeopleListVM
     {
         foreach (PersonVM NewItem in e.NewItems)
         {
+            if(NewItem.Id!=0) continue;
             NewItem.PropertyChanged += PersonVmOnPropertyChanged;
             _repository.Insert(NewItem._person);
+            IsChanged = true;
         }
 
-        IsChanged = true;
     }
     private void CollectionChangedRemoved(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
@@ -146,14 +158,18 @@ public class PeopleListVM
         _mainWindow.Save_btn.IsEnabled = isEnabled;
         _mainWindow.Cancel_btn.IsEnabled = isEnabled;
     }
-    
-    
-    private bool IsValid(DependencyObject obj)
+
+    bool IsValid(ObservableCollection<PersonVM> list)
     {
-        return !Validation.GetHasError(obj) &&
-               LogicalTreeHelper.GetChildren(obj)
-                   .OfType<DependencyObject>()
-                   .All(IsValid);
+
+        return list.All(person =>
+        {
+            return Validator.TryValidateObject(person
+                , new ValidationContext(person, null, null)
+                , new List<ValidationResult>()
+                , false);
+        });
+
     }
     
 

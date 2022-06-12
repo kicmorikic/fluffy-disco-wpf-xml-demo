@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,7 +12,7 @@ using wpfApp.Model;
 
 namespace wpfApp.ViewModel
 {
-    public class PersonVM : IDataErrorInfo,INotifyPropertyChanged
+    public class PersonVM : IDataErrorInfo,INotifyPropertyChanged, IValidatableObject
     {
         internal Person _person;
         
@@ -155,7 +156,7 @@ namespace wpfApp.ViewModel
                     nameof(FirstName) => string.IsNullOrWhiteSpace(FirstName)
                         ? $"{nameof(FirstName)} cannot be empty"
                         : string.Empty,
-                    nameof(LastName) => string.IsNullOrWhiteSpace(FirstName)
+                    nameof(LastName) => string.IsNullOrWhiteSpace(LastName)
                         ? $"{nameof(LastName)} cannot be empty"
                         : string.Empty,
                     nameof(StreetName) => string.IsNullOrWhiteSpace(StreetName)
@@ -186,5 +187,26 @@ namespace wpfApp.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var checks = new List<string>();
+            var results = new List<ValidationResult>();
+            checks.Add(this[nameof(FirstName)]);
+            checks.Add(this[nameof(LastName)]);
+            checks.Add(this[nameof(StreetName)]);
+            checks.Add(this[nameof(HouseNumber)]);
+            checks.Add(this[nameof(ApartmentNumber)]);
+            checks.Add(this[nameof(PostalCode)]);
+            checks.Add(this[nameof(Town)]);
+            checks.Add(this[nameof(PhoneNumber)]);
+            checks.Add(this[nameof(DateOfBirth)]);
+            checks.Where(check => !String.IsNullOrWhiteSpace(check)).ToList()
+                .ForEach(check => results.Add(new ValidationResult(check)));
+            return results;
+        }
+
+
+    
     }
 }

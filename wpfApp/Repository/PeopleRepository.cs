@@ -25,26 +25,21 @@ public class PeopleRepository : IPeopleRepository
         if (File.Exists(_xmlPath))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(PeopleList));
-            bool canDeserialize = false;
             using (var stream = File.OpenRead(_xmlPath))
             {
-                canDeserialize = serializer.CanDeserialize(XmlReader.Create(stream));
-            }
-
-            if (canDeserialize)
-            {
-                using (FileStream stream = File.OpenRead(_xmlPath))
+                try
                 {
-                    _peopleList = (PeopleList)serializer.Deserialize(stream);
+                    _peopleList = (PeopleList) serializer.Deserialize(stream);
+                }
+                catch
+                {
+                    //backup undeserializable file
+                    stream.Close();
+                    File.Move(_xmlPath, $"{_xmlPath}.{DateTime.Now.ToString("yyyy-MM-ddThhmmss")}.bak");
+                    _peopleList = new();
                 }
             }
-            else
-            {
-                //backup undeserializable file
-                File.Move(_xmlPath,$"{_xmlPath}.{DateTime.Now.ToString("yyyy-MM-ddThhmmss")}.bak");
-                _peopleList = new();
-            }
-            
+
             AddIds();
             
 
