@@ -5,8 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wpfApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Fluffy Disco" Height="450" Width="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <DataGrid Grid.Row="0" 
+                  Name="PeopleDG" 
+                  Margin="10"
+                  HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch"
+                  CanUserAddRows="True" 
+                  CanUserDeleteRows="True" 
+                  SelectionChanged="PeopleDG_SelectionChanged"
+                  >
+            
+        </DataGrid>
+        
     </Grid>
+
 </Window>
