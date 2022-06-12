@@ -20,9 +20,17 @@ namespace wpfApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private 
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        
+
+        private void PeopleDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
