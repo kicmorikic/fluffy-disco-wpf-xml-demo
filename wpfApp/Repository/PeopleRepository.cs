@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Serialization;
 using wpfApp.Model;
 
@@ -24,17 +25,33 @@ public class PeopleRepository : IPeopleRepository
         if (File.Exists(_xmlPath))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(PeopleList));
-            using (FileStream stream = File.OpenRead(_xmlPath))
+            bool canDeserialize = false;
+            using (var stream = File.OpenRead(_xmlPath))
             {
-                _peopleList = (PeopleList)serializer.Deserialize(stream);
+                canDeserialize = serializer.CanDeserialize(XmlReader.Create(stream));
             }
+
+            if (canDeserialize)
+            {
+                using (FileStream stream = File.OpenRead(_xmlPath))
+                {
+                    _peopleList = (PeopleList)serializer.Deserialize(stream);
+                }
+            }
+            else
+            {
+                //backup undeserializable file
+                File.Move(_xmlPath,$"{_xmlPath}.{DateTime.Now.ToString("yyyy-MM-ddThhmmss")}.bak");
+                _peopleList = new();
+            }
+            
             AddIds();
             
 
         }
         else
         {
-            _peopleList = new PeopleList();
+            _peopleList = new();
         }
     }
     

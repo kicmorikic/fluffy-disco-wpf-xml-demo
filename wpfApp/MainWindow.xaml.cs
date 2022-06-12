@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using wpfApp.Repository;
+using wpfApp.ViewModel;
 
 namespace wpfApp
 {
@@ -20,17 +23,24 @@ namespace wpfApp
     /// </summary>
     public partial class MainWindow : Window
     {
-         
-        public MainWindow()
+        private PeopleListVM _peopleList;
+        public ObservableCollection<PersonVM> PersonVM
         {
-            InitializeComponent();
+            get { return _peopleList.peopleVMColection; }
+            
         }
+        public MainWindow(IPeopleRepository repository)
+        {
+
+            InitializeComponent();
+            _peopleList = new PeopleListVM(repository ,this );
+
+            
+        }
+        
 
         
 
-        private void PeopleDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+        
     }
 }

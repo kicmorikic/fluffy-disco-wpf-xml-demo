@@ -5,24 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wpfApp"
         mc:Ignorable="d"
-        Title="Fluffy Disco" Height="450" Width="800">
+        Title="Fluffy Disco" Height="450" Width="850">
+    
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
+        
+
         <DataGrid Grid.Row="0" 
+                  Grid.Column ="0"
                   Name="PeopleDG" 
-                  Margin="10"
-                  HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"
+                  Margin="10,10,10,10"
+                  AutoGenerateColumns="False"
                   CanUserAddRows="True" 
                   CanUserDeleteRows="True" 
-                  SelectionChanged="PeopleDG_SelectionChanged"
-                  >
-            
+                  ItemsSource="{Binding PersonVM, RelativeSource= {RelativeSource AncestorType=Window}}" 
+                  Grid.ColumnSpan="2" 
+                  HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="First Name" 
+                                    Binding="{Binding FirstName, ValidatesOnDataErrors=True}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="Last Name" 
+                                    Binding="{Binding LastName, ValidatesOnDataErrors=True}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="Street Name" 
+                                    Binding="{Binding StreetName, ValidatesOnDataErrors=True}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="House Number" 
+                                    Binding="{Binding HouseNumber, ValidatesOnDataErrors=True}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="Apartment Number" 
+                                    Binding="{Binding ApartmentNumber, ValidatesOnDataErrors=False}"/>
+                <DataGridTextColumn Header="Postal Code" 
+                                    Binding="{Binding PostalCode, ValidatesOnDataErrors=True}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="Town" 
+                                    Binding="{Binding Town, ValidatesOnDataErrors=True}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="PhoneNumber" 
+                                    Binding="{Binding PhoneNumber, ValidatesOnDataErrors=True }"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="Date of birth" Binding="{Binding DateOfBirth, ValidatesOnDataErrors=True,StringFormat='yyyy-MM-dd'}"
+                                    EditingElementStyle="{StaticResource errTemplate}"/>
+                <DataGridTextColumn Header="Age" Binding="{Binding Age}" IsReadOnly="True" />
+            </DataGrid.Columns>
         </DataGrid>
-        
+
+
+
+        <Button Grid.Row="1" Grid.Column="0" Margin="3" Content ="Save" Name="Save_btn" ></Button>
+        <Button Grid.Row="1" Grid.Column="1" Margin="3" Content ="Cancel" Name="Cancel_btn"></Button>
+
+
     </Grid>
 
 </Window>
