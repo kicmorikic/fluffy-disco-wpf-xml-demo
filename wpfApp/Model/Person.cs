@@ -9,7 +9,8 @@ public class Person
     [XmlIgnore]
     public int Id { get; set; }
 
-    [XmlElement] public string FirstName { get; set; } = "";
+    [XmlElement] 
+    public string FirstName { get; set; } = "";
     [XmlElement]
     public string LastName { get; set; } = "";
     [XmlElement]
